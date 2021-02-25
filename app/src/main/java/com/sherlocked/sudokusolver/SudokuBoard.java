@@ -43,7 +43,7 @@ public class SudokuBoard extends View {
             cellFillColor = a.getInteger(R.styleable.SudokuBoard_cellFillColor,0);
             cellsHighlightColor = a.getInteger(R.styleable.SudokuBoard_cellsHighlightColor,0);
             letterColor = a.getInteger(R.styleable.SudokuBoard_letterColor,0);
-            letterColorSolve = a.getColor(R.styleable.SudokuBoard_letterColorSolve,0);
+            letterColorSolve = a.getInteger(R.styleable.SudokuBoard_letterColorSolve,0);
         }finally{
             a.recycle();
         }
@@ -82,6 +82,7 @@ public class SudokuBoard extends View {
 
         canvas.drawRect(0,0,getWidth(),getHeight(),boardColorPaint);
         drawBoard(canvas);
+        drawNumbers(canvas);
     }
 
     @SuppressLint("ClickableViewAccessibility")
