@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -109,6 +110,7 @@ public class SudokuBoard extends View {
 
     private void drawNumbers(Canvas canvas){
 
+        Log.d("Krod",cellSize + " yo");
         letterPaint.setTextSize(cellSize);
 
         for(int r = 0 ; r<9 ; r++) {
@@ -119,7 +121,7 @@ public class SudokuBoard extends View {
                     letterPaint.getTextBounds(text,0,text.length(),letterPaintBounds);
                     width = letterPaint.measureText(text);
                     height = letterPaintBounds.height();
-
+                    Log.d("BSSR",  text + " " + letterColor + " " + letterColorSolve + " " + width + " " + height);
                     canvas.drawText(text,(c*cellSize) + ((cellSize-width)/2),
                             (r*cellSize+cellSize)-((cellSize-height)/2),letterPaint);
                 }
@@ -132,6 +134,7 @@ public class SudokuBoard extends View {
             int r = (int)letter.get(0);
             int c = (int)letter.get(1);
             String text = Integer.toString(solver.getBoard()[r][c]);
+            Log.d("Grow", text + "This");
             float width,height;
             letterPaint.getTextBounds(text,0,text.length(),letterPaintBounds);
             width = letterPaint.measureText(text);

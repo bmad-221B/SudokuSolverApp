@@ -3,11 +3,14 @@ package com.sherlocked.sudokusolver;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     private SudokuBoard gameBoard;
     private Solver gameBoardSolver;
+    private Button solveBTN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,9 +20,12 @@ public class MainActivity extends AppCompatActivity {
         gameBoard = findViewById(R.id.SudokuBoard);
         gameBoardSolver = gameBoard.getSolver();
 
+        solveBTN = findViewById(R.id.solveButton);
+
     }
 
     public void BTNOnePress(View view){
+//        Toast.makeText(this,"RSSB is THis",Toast.LENGTH_SHORT).show();
         gameBoardSolver.setNumberPos(1);
         gameBoard.invalidate();
     }
@@ -56,6 +62,31 @@ public class MainActivity extends AppCompatActivity {
     public void BTNNinePress(View view){
         gameBoardSolver.setNumberPos(9);
         gameBoard.invalidate();
+    }
+
+    public void solve(View view){
+        if(solveBTN.getText().toString().equals(getString(R.string.solve))){
+            solveBTN.setText(getString(R.string.clear));
+
+            gameBoardSolver.getEmptyBoxIndexes();
+            SolveBoardThread solveBoardThread = new SolveBoardThread();
+            new Thread(solveBoardThread).start();
+            gameBoard.invalidate();
+        }
+        else {
+            solveBTN.setText(getString(R.string.solve));
+
+            gameBoardSolver.resetBoard();
+            gameBoard.invalidate();
+
+        }
+    }
+
+    class SolveBoardThread implements Runnable{
+        @Override
+        public void run(){
+            gameBoardSolver.solve(gameBoard);
+        }
     }
 
 }

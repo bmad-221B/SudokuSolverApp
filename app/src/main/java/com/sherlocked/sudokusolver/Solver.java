@@ -1,5 +1,7 @@
 package com.sherlocked.sudokusolver;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 public class Solver {
@@ -24,7 +26,7 @@ public class Solver {
         emptyBoxIndex = new ArrayList<>();
     }
 
-    private void getEmptyBoxIndexs(){
+    public void getEmptyBoxIndexes(){
         for(int r = 0 ; r<9 ; r++) {
             for(int c = 0 ; c<9 ; c++) {
                 if(this.board[r][c] == 0){
@@ -36,12 +38,84 @@ public class Solver {
         }
     }
 
+    private boolean check(int row , int col){
+        if(this.board[row][col]>0){
+            for(int i = 0 ; i<9 ; i++) {
+                if(row != i && this.board[i][col] == this.board[row][col]){
+                    return(false);
+                }
+            }
+            for(int i = 0 ; i<9 ; i++) {
+                if(col != i && this.board[row][i] == this.board[row][col]){
+                    return(false);
+                }
+            }
+            int boxRow = row/3;
+            int boxCol = col/3;
+            for(int r = boxRow*3 ; r<(boxRow+1)*3 ; r++) {
+                for(int c = boxCol*3 ; c<(boxCol+1)*3 ; c++){
+                    if(r==row && c==col) {
+                        continue;
+                    }
+                    if(this.board[r][c]==this.board[row][col]) {
+                            return(false);
+                    }
+                }
+            }
+        }
+        return(true);
+    }
+
+    public boolean solve(SudokuBoard display){
+        int row = -1;
+        int col = -1;
+
+        for(int r = 0 ; r<9 ; r++) {
+            for(int c = 0 ; c<9 ; c++){
+                if(this.board[r][c]==0){
+                    row = r;
+                    col = c;
+                    break;
+                }
+            }
+            if(row!=-1) {
+                break;
+            }
+        }
+
+        if(row==-1 || col==-1) {
+            return(true);
+        }
+
+        for(int i = 1 ; i<10 ; i++){
+            this.board[row][col] = i;
+            display.invalidate();
+            if(check(row,col) && solve(display)){
+                return(true);
+            }
+            this.board[row][col] = 0;
+        }
+        return(false);
+    }
+
+    public void resetBoard(){
+        for(int r = 0 ; r<9 ; r++) {
+            for(int c = 0 ; c<9 ; c++) {
+                board[r][c] = 0;
+            }
+        }
+
+        this.emptyBoxIndex = new ArrayList<>();
+
+    }
+
     public void setNumberPos(int num){
         if(this.selected_row != -1 && this.selected_column != -1){
             if(this.board[this.selected_row-1][this.selected_column-1] == num){
                 this.board[this.selected_row-1][this.selected_column-1] = 0;
             }
             else{
+                Log.d("RSSB",num + " yo");
                 this.board[this.selected_row-1][this.selected_column-1] = num;
             }
         }
@@ -64,10 +138,12 @@ public class Solver {
     }
 
     public void setSelectedRow(int r){
+        Log.d("Here",selected_row + " Row");
         selected_row = r;
     }
 
     public void setSelectedColumn(int c){
+        Log.d("Here",selected_column + " Column");
         selected_column = c;
     }
 }
